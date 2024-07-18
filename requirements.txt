@@ -1,0 +1,6 @@
+matplotlib
+numba
+numpy
+biopython
+scipy
+dca==1.0.0 -e https://github.com/utdal/py-mfdca@v1.0.0
