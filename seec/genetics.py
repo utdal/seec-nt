@@ -80,9 +80,9 @@ class GeneticsTools:
         """Check if current codon is one mutation away from producing the proposed amino acid.
         If possible, return a [true, newCodon]. If not, return [false, currentCodon]."""
         distances = self.distance_matrix[currentCodon, self.genetic_code[proposalAA]]
-        possibleMutations = distances[distances == 1]  # one nt mutation away allowed
+        possibleMutations = distances[distances <= 1]  # one nt mutation away allowed
         if len(possibleMutations) == 0:
             return [False, currentCodon]
         else:
-            newCodon = np.random.choice(self.genetic_code[proposalAA][distances == 1])
+            newCodon = np.random.choice(self.genetic_code[proposalAA][distances <= 1])
             return [True, newCodon]
