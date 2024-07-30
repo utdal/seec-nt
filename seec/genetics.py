@@ -23,6 +23,7 @@ genetic_code = {
     "W": ["TGG"],
     "Y": ["TAT", "TAC"],
     "V": ["GTT", "GTC", "GTA", "GTG"],
+    "-": ["---"]
 }
 
 
