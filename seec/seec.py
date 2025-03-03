@@ -90,20 +90,22 @@ class SEECnt:
 
     def evolveSequence(
         self,
-        input_AASeq: str,
-        input_NTSeq: str,
+        aa_seq: str,
+        nt_seq: str,
         num_steps: int,
         selection_temp: float = 1.0,
+        seed: int = None,
     ) -> list:
         # Get sequence info encoded and verified
-        aa_seq = next(SeqIO.parse(input_AASeq, "fasta")).seq
-        nt_seq = next(SeqIO.parse(input_NTSeq, "fasta")).seq
+        # aa_seq = next(SeqIO.parse(input_AASeq, "fasta")).seq
+        # nt_seq = next(SeqIO.parse(input_NTSeq, "fasta")).seq
         numeric_aa = self.genetics.parseProtein(aa_seq)
         numeric_nt = self.genetics.parseDNA(nt_seq)
         if not self.verifySequences(numeric_aa, numeric_nt):
             print("Failed...")
             return
-
+        if seed is not None:
+            np.random.seed(seed)
         # define arrays for computation
         aa_sequences = np.zeros((num_steps + 1, numeric_aa.shape[0]), dtype=np.int32)
         nt_sequences = np.zeros((num_steps + 1, numeric_nt.shape[0]), dtype=np.int32)
