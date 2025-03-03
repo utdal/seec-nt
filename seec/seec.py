@@ -48,6 +48,18 @@ class SEECnt:
             return True
 
     def mutationStep(self, aa_seq: np.array, nt_seq: np.array, temp: float) -> list:
+        """
+        Perform a single mutation step on the sequence
+
+        Args:
+            aa_seq: np.array - amino acid sequence
+            nt_seq: np.array - nucleotide sequence  
+            temp: float - temperature
+
+        Returns:
+            aa_seq: np.array - amino acid sequence
+            nt_seq: np.array - nucleotide sequence
+        """
         # choose uniformly from all non-gap positions in aa_seq
         non_gap_positions = np.arange(len(aa_seq))[
             aa_seq != self.dca_params.symboldict["-"]
@@ -96,16 +108,31 @@ class SEECnt:
         selection_temp: float = 1.0,
         seed: int = None,
     ) -> list:
-        # Get sequence info encoded and verified
-        # aa_seq = next(SeqIO.parse(input_AASeq, "fasta")).seq
-        # nt_seq = next(SeqIO.parse(input_NTSeq, "fasta")).seq
+        
+        """
+        Evolve a sequence through a number of steps
+
+        Args:
+            aa_seq: str - amino acid sequence   
+            nt_seq: str - nucleotide sequence
+            num_steps: int - number of steps to evolve
+            selection_temp: float - selection temperature
+            seed: int - random seed
+
+        Returns:
+            aa_sequences: list - list of amino acid sequences
+            nt_sequences: list - list of nucleotide sequences
+        """
+
         numeric_aa = self.genetics.parseProtein(aa_seq)
         numeric_nt = self.genetics.parseDNA(nt_seq)
         if not self.verifySequences(numeric_aa, numeric_nt):
             print("Failed...")
             return
+        
         if seed is not None:
             np.random.seed(seed)
+
         # define arrays for computation
         aa_sequences = np.zeros((num_steps + 1, numeric_aa.shape[0]), dtype=np.int32)
         nt_sequences = np.zeros((num_steps + 1, numeric_nt.shape[0]), dtype=np.int32)
@@ -152,16 +179,25 @@ class SEECnt:
                     out.write(f">Sequence step {idx}\n")
                     out.write(seq + "\n")
 
-    def compute_Hamiltonian(self, sequences, temperature, interDomainCutoff=None):
+    def compute_Hamiltonian(self, sequences):
+        """
+        Compute the Hamiltonian for a list of sequences
+
+        Args:
+            sequences: list - list of amino acid sequences
+
+        Returns:
+            hamiltonian: float - Hamiltonian
+            headers: list - list of headers
+        """
         numerical_sequences, headers = create_numerical_MSA(
             sequences, self.dca_params.symboldict
         )
         return (
             return_Hamiltonian(
                 numerical_sequences,
-                self.dca_params.couplings / temperature,
-                self.dca_params.localfields / temperature,
-                interDomainCutoff=interDomainCutoff,
+                self.dca_params.couplings,
+                self.dca_params.localfields 
             ),
             headers,
         )
