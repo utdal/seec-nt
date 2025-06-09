@@ -150,15 +150,15 @@ class SEECnt:
                     out.write(f">Sequence step {idx}\n")
                     out.write(seq + "\n")
 
-    def compute_Hamiltonian(self, sequences, temperature, interDomainCutoff=None):
+    def compute_Hamiltonian(self, sequences, interDomainCutoff=None):
         numerical_sequences, headers = create_numerical_MSA(
             sequences, self.dca_params.symboldict
         )
         return (
             return_Hamiltonian(
                 numerical_sequences,
-                self.dca_params.couplings / temperature,
-                self.dca_params.localfields / temperature,
+                self.dca_params.couplings,
+                self.dca_params.localfields,
                 interDomainCutoff=interDomainCutoff,
             ),
             headers,
