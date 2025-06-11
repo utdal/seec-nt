@@ -35,17 +35,13 @@ class SEECnt:
 
     def verifySequences(self, numeric_aa: np.array, numeric_nt: np.array) -> bool:
         if len(numeric_aa) != len(numeric_nt):
-            print(
+            raise ValueError(
                 f"AA Length: {len(numeric_aa)} does not match NT length: {len(numeric_nt)}"
             )
-            return False
         elif len(numeric_aa) != self.dca_params.couplings.shape[0]:
-            print(
+            raise ValueError(
                 f"Input AA seq does not match MSA sequence length ({len(numeric_aa)} != {self.dca_params.couplings.shape[0]})"
             )
-            return False
-        else:
-            return True
 
     def mutationStep(self, aa_seq: np.array, nt_seq: np.array, temp: float) -> list:
         # choose uniformly from all non-gap positions in aa_seq
@@ -100,9 +96,7 @@ class SEECnt:
         nt_seq = next(SeqIO.parse(input_NTSeq, "fasta")).seq
         numeric_aa = self.genetics.parseProtein(aa_seq)
         numeric_nt = self.genetics.parseDNA(nt_seq)
-        if not self.verifySequences(numeric_aa, numeric_nt):
-            print("Failed...")
-            return
+        self.verifySequences(numeric_aa, numeric_nt)
 
         # define arrays for computation
         aa_sequences = np.zeros((num_steps + 1, numeric_aa.shape[0]), dtype=np.int32)
