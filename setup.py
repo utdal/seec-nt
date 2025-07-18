@@ -15,6 +15,6 @@ setup(
         "numpy",
         "numba",
         "scipy",
-        "dca @ git+https://github.com/utdal/py-mfdca@v1.0.0",
+        "dca @ git+https://github.com/utdal/py-mfdca",
     ],
 )
